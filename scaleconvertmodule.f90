@@ -17,13 +17,25 @@ module scaleconvertmodule
 
         ! If there is a feet value
         if (input%feet .gt. 0) then
-            f1%unit = 0            
-            f1%numerator = ((input%feet * 12) + input%inches%unit) * input%inches%denominator + input%inches%numerator
-            f1%denominator = input%inches%denominator
+            f1%unit = 0
+            ! If the denominator is greater than 1 
+            if (input%inches%denominator .gt. 1) then
+                f1%numerator = ((input%feet * 12) + input%inches%unit) * input%inches%denominator + input%inches%numerator
+                f1%denominator = input%inches%denominator
+            ! Otherwise it is one.
+            else
+                f1%numerator = (input%feet * 12) + input%inches%unit
+                f1%denominator = 1
+            end if
         else if (input%inches%unit .gt. 0) then
             f1%unit = 0
-            f1%numerator = input%inches%unit * input%inches%denominator + input%inches%numerator
-            f1%denominator = input%inches%denominator
+            if (input%inches%denominator .gt. 1) then
+                f1%numerator = input%inches%unit * input%inches%denominator + input%inches%numerator
+                f1%denominator = input%inches%denominator
+            else
+                f1%numerator = input%inches%unit
+                f1%denominator = 1
+            end if
         else
             f1%unit = 0
             f1%numerator = input%inches%numerator
@@ -86,7 +98,76 @@ module scaleconvertmodule
         fractions(3) = abovef
     end function closestimperialfraction
 
-    ! ! Function to convert a string to an imperialtype
+    ! Given a value in feet and a scale, generate a table of values
+    function feettable(feet, scale) result(output)
+        real, intent(in) :: feet
+        real, intent(in) :: scale
+        type(scaletype), dimension(13) :: output
+        integer :: i, count
+
+        count = 1
+
+        output(count) = calculation(feet * 12.0, scale)
+        output(count)%original%feet = feet
+        output(count)%original%inches%unit = 0
+        count = count + 1
+        do i = 1, 11
+            output(count) = calculation((feet * 12.0) + i, scale)
+            output(count)%original%feet = feet
+            output(count)%original%inches%unit = i
+            count = count + 1
+        end do
+        output(count) = calculation((feet + 1) * 12.0, scale)
+        output(count)%original%feet = feet + 1
+        output(count)%original%inches%unit = 0
+    end function feettable
+
+    ! Given a value in inches and a scale, generate a table of values
+    function inchtable(inches, division, scale) result(output)
+        real, intent(in) :: inches, division, scale
+        type(scaletype), dimension(int(division)+1) :: output
+        integer :: i, count
+
+        count = 1
+        output(count) = calculation(inches, scale)
+        output(count)%original%feet = 0
+        output(count)%original%inches%unit = inches
+        output(count)%original%inches%numerator = 0
+        output(count)%original%inches%denominator = 1
+        count = count + 1
+        do i = 1, int(division-1)
+            output(count) = calculation(inches + (i / division), scale)
+            output(count)%original%feet = 0
+            output(count)%original%inches%unit = inches
+            output(count)%original%inches%numerator = i
+            output(count)%original%inches%denominator = division
+            count = count + 1
+        end do
+        output(count) = calculation(inches + 1.0, scale)
+        output(count)%original%feet = 0
+        output(count)%original%inches%unit = inches +1.0
+        output(count)%original%inches%numerator = 0
+        output(count)%original%inches%denominator = 1
+    end function inchtable
+
+    ! Perform the calculation and return the scaletype
+    function calculation(inches, scale) result(output)
+        real, intent(in) :: inches, scale
+        type(scaletype) :: output
+        type(fractiontype), dimension(3) :: fractions
+        real :: r
+
+        r = (inches) / scale
+        output%imperialdecimal = r
+        output%metricdecimal = r * inch2mm
+        output%scale = scale
+        fractions = closestimperialfraction(output%imperialdecimal)
+        output%imperialbelow%inches = fractions(1)
+        output%imperialvalue%inches = fractions(2)
+        output%imperialabove%inches = fractions(3)
+    end function calculation
+
+    ! Function to convert a string to an imperialtype
     function str2imp(input) result(imperialstr)
         character(len=*), intent(in) :: input
         type(imperialtype) :: imperialstr
@@ -204,4 +285,5 @@ module scaleconvertmodule
 
         round = nint(value * 10.0**precision) / 10.0**precision
     end function round
+
 end module scaleconvertmodule

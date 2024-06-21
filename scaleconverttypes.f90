@@ -10,6 +10,7 @@ module scaleconverttypes
 
     ! Type to hold scale conversions
     type :: scaletype
+        type(imperialtype) :: original          ! Original imperial value
         real :: imperialdecimal                 ! Decimal representation of imperial value
         real :: metricdecimal                   ! Decimal representation of metric value
         real :: scale                           ! Scale factor
@@ -26,7 +27,7 @@ module scaleconverttypes
     character(len=1) :: spacedelim = " "
 
     ! Constants
-    integer, parameter :: inchprecision = 64
+    integer, parameter :: inchprecision = 64    ! 64 (1), 32 (2), 16(4), 8(8), 4(16), 2(32), 1(64)
     real, parameter :: inch2mm = 25.4
     real, parameter :: baseDenominator = 10e+4
     real, parameter :: precision = 2.0
