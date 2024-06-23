@@ -1,9 +1,81 @@
 module scaleconvertmodule
     use fractionmodule
     use scaleconverttypes
+    use trigmod
     implicit none
 
     contains
+
+    ! Function to create a plot of points
+    ! for a given radius for a curve
+    function generateplotpoints(radius, arc) result(output)
+        real, intent(in) :: radius
+        integer, intent(in) :: arc
+        type(plotXY), dimension(arc) :: output
+        integer :: i
+
+        do i = 1, arc
+            output(i)%x = adj_hyp_ang_deg(radius, real(i))
+            output(i)%y = opp_hyp_ang_deg(radius, real(i))
+        end do 
+    end function generateplotpoints
+
+    ! Function to calculate the height of a helix
+    ! This is adapted from a spreadsheet that I used to create
+    ! my helix for my original layout.  The only fault was space
+    ! and heat, but the calculations were correct even if workmanship
+    ! was not.  I used the math the create a radial arm helix using 8mm 
+    ! slats to support 6mm ply, increasing height by 11mm every 45 degrees
+    !      0.00     11.00      2.77    505.00     74.00     14.00
+    !     45.00     22.00      2.77    505.00     74.00     14.00
+    !     90.00     33.00      2.77    505.00     74.00     14.00
+    !    135.00     44.00      2.77    505.00     74.00     14.00
+    !    180.00     55.00      2.77    505.00     74.00     14.00
+    !    225.00     66.00      2.77    505.00     74.00     14.00
+    !    270.00     77.00      2.77    505.00     74.00     14.00
+    !    315.00     88.00      2.77    505.00     74.00     14.00
+    !    360.00     99.00      2.77    505.00     74.00     14.00
+    function helix(radius, support, increment) result(output)
+        real, intent(in) :: radius, support, increment
+        type(helixtype), allocatable, dimension(:) :: output
+        integer ::  count
+        real, allocatable, dimension(:) :: height
+        real :: gradient, i, degrees
+
+        degrees = 45.
+        count = 1
+
+        ! Allocate the array
+        allocate(output(9))
+        allocate(height(9))
+
+        ! Through a single revolution at 45 degree intervals
+        do i = 0., 360., degrees
+            if (count .gt. 1) then
+                height(count) = height(count -1) + (increment)
+            else
+                height(count) = height(count) + (increment)
+            end if
+            output(count)%height = height(count)
+            output(count)%degree = i
+            output(count)%radius = radius
+            count = count + 1
+        end do
+
+        count = 1
+        ! Calculate the gradient more for consistency
+        do i = degrees, 360.+degrees, degrees
+            gradient = (height(count) / ((2. * pi * radius)/(360./i))) * 100.
+            output(count)%gradient = gradient
+            count = count + 1
+        end do
+
+        ! Calculate the clearence and supports
+        do i = 1, 9
+            output(i)%clearence = (output(size(output))%height - output(1)%height) - support
+            output(i)%supports = support
+        end do
+    end function helix
 
     ! Function to convert a string to a scale type
     function imperialscale(input, scale) result(output)
@@ -57,8 +129,7 @@ module scaleconvertmodule
         fractions = closestimperialfraction(output%imperialdecimal)
         output%imperialbelow%inches = fractions(1)
         output%imperialvalue%inches = fractions(2)
-        output%imperialabove%inches = fractions(3)
-        
+        output%imperialabove%inches = fractions(3)        
     end function imperialscale
 
     ! Find the closest imperial fractions

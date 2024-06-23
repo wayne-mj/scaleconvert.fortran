@@ -1,8 +1,26 @@
 program scaleconvert
     use fractionmodule
     use scaleconvertmodule
+    use trigmod
 
     implicit none
+    ! type(plotXY), allocatable :: plots (:)
+    type(helixtype), allocatable :: i(:)
+    integer :: j
+
+    i = helix(505.,14.,11.)
+    do j=1, size(i)
+        write(*, '(6F10.2)'), i(j)%degree, i(j)%height, i(j)%gradient, i(j)%radius, i(j)%clearence, i(j)%supports
+    end do
+
+    ! print *, "Clearence: ", i(size(i))%height - i(1)%height
+    ! print *, "excluding workmanships"
+    ! plots = generateplotpoints(510., 179)
+
+    ! do i=0, size(plots)
+    !     write(*,'(2F10.1, 2A)') plots(i)%x, plots(i)%y
+    ! end do
+
     ! character(len=1) :: newline = achar(10)
     ! character(len=1) :: quote = achar(39)
     ! character(len=1) :: doublequote = achar(34)
@@ -13,26 +31,26 @@ program scaleconvert
     ! type(fractiontype), dimension(3) :: f1
     ! character(len=100) :: test, test1, test2, test3, test4, test5
     ! type(imperialtype):: imp
-    type(scaletype), allocatable :: imp2(:)
-    integer :: i
+    ! type(scaletype), allocatable :: imp2(:)
+    ! integer :: i
 
-    imp2 = feettable(1.,87.1)
+    ! imp2 = feettable(1.,87.1)
     
-    do i=1, size(imp2)
-        write(*,'(5F10.2)') imp2(i)%imperialdecimal, imp2(i)%metricdecimal, imp2(i)%scale, real(imp2(i)%original%feet), real(imp2(i)%original%inches%unit)
-    end do
-
     ! do i=1, size(imp2)
-    !     write( *,'(6I5)') imp2(i)%imperialbelow%inches%numerator, imp2(i)%imperialbelow%inches%denominator, imp2(i)%imperialvalue%inches%numerator, imp2(i)%imperialvalue%inches%denominator, imp2(i)%imperialabove%inches%numerator, imp2(i)%imperialabove%inches%denominator
+    !     write(*,'(5F10.2)') imp2(i)%imperialdecimal, imp2(i)%metricdecimal, imp2(i)%scale, real(imp2(i)%original%feet), real(imp2(i)%original%inches%unit)
     ! end do
 
-     print *, ""
+    ! ! do i=1, size(imp2)
+    ! !     write( *,'(6I5)') imp2(i)%imperialbelow%inches%numerator, imp2(i)%imperialbelow%inches%denominator, imp2(i)%imperialvalue%inches%numerator, imp2(i)%imperialvalue%inches%denominator, imp2(i)%imperialabove%inches%numerator, imp2(i)%imperialabove%inches%denominator
+    ! ! end do
 
-    imp2 = inchtable(12.,32.,87.1)
+    !  print *, ""
 
-    do i=1, size(imp2)
-        write(*,'(8F10.2)') real(i), imp2(i)%imperialdecimal, imp2(i)%metricdecimal, imp2(i)%scale, real(imp2(i)%original%feet), real(imp2(i)%original%inches%unit), real(imp2(i)%original%inches%numerator), real(imp2(i)%original%inches%denominator)
-    end do
+    ! imp2 = inchtable(12.,32.,87.1)
+
+    ! do i=1, size(imp2)
+    !     write(*,'(8F10.2)') real(i), imp2(i)%imperialdecimal, imp2(i)%metricdecimal, imp2(i)%scale, real(imp2(i)%original%feet), real(imp2(i)%original%inches%unit), real(imp2(i)%original%inches%numerator), real(imp2(i)%original%inches%denominator)
+    ! end do
 
     ! write (*, '(A)', advance='no') "Enter you measurement feet inches fractions: "
     ! read (*,*) test1, test2, test3, test4

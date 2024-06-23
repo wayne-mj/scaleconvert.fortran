@@ -9,3 +9,4 @@ modules/
 *.out
 scaleconvert
 *.a
+*.dat
