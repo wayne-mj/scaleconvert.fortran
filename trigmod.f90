@@ -1,6 +1,9 @@
 module trigmod
     implicit none
     real, parameter :: pi = 4 * atan(1.0)
+    character(len=100) :: helixheader1 = "     Degrees      Height      Gradient     Radius      Clearence     Supports"
+    character(len=100) :: helixheader2 = " ----------------------------------------------------------------------------"
+    character(len=100) :: helixtable = '(F10.2 A F10.2 A F10.2 A F10.2 A F10.2 A F10.2 A)'
 
     ! Define a type to store x and y coordinates for plotting
     type :: plotXY

@@ -7,11 +7,17 @@ program scaleconvert
     ! type(plotXY), allocatable :: plots (:)
     type(helixtype), allocatable :: i(:)
     integer :: j
+    character(len=1) :: deg = achar(176)
 
+    write (*, '(A)'), helixheader1
+    write (*, '(A)'), helixheader2
     i = helix(505.,14.,11.)
     do j=1, size(i)
-        write(*, '(6F10.2)'), i(j)%degree, i(j)%height, i(j)%gradient, i(j)%radius, i(j)%clearence, i(j)%supports
-    end do
+        write(*, helixtable), i(j)%degree, "deg" ,i(j)%height, "mm ", i(j)%gradient, "% " ,i(j)%radius, "mm ", i(j)%clearence, "mm ", i(j)%supports, "mm "
+    end do 
+
+    print *, ""
+    write (*,' (A F10.2)'), "Base Denominator:" , baseDenominator
 
     ! print *, "Clearence: ", i(size(i))%height - i(1)%height
     ! print *, "excluding workmanships"

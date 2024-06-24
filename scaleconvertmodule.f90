@@ -26,15 +26,18 @@ module scaleconvertmodule
     ! and heat, but the calculations were correct even if workmanship
     ! was not.  I used the math the create a radial arm helix using 8mm 
     ! slats to support 6mm ply, increasing height by 11mm every 45 degrees
-    !      0.00     11.00      2.77    505.00     74.00     14.00
-    !     45.00     22.00      2.77    505.00     74.00     14.00
-    !     90.00     33.00      2.77    505.00     74.00     14.00
-    !    135.00     44.00      2.77    505.00     74.00     14.00
-    !    180.00     55.00      2.77    505.00     74.00     14.00
-    !    225.00     66.00      2.77    505.00     74.00     14.00
-    !    270.00     77.00      2.77    505.00     74.00     14.00
-    !    315.00     88.00      2.77    505.00     74.00     14.00
-    !    360.00     99.00      2.77    505.00     74.00     14.00
+    ! Example table:
+    !     Degrees      Height      Gradient     Radius      Clearence     Supports
+    ! ----------------------------------------------------------------------------
+    !      0.00deg     11.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !     45.00deg     22.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !     90.00deg     33.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !    135.00deg     44.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !    180.00deg     55.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !    225.00deg     66.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !    270.00deg     77.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !    315.00deg     88.00mm       2.77%     505.00mm      74.00mm      14.00mm 
+    !    360.00deg     99.00mm       2.77%     505.00mm      74.00mm      14.00mm 
     function helix(radius, support, increment) result(output)
         real, intent(in) :: radius, support, increment
         type(helixtype), allocatable, dimension(:) :: output
@@ -139,7 +142,7 @@ module scaleconvertmodule
         type(fractiontype) :: middlef, abovef, belowf
         integer :: inch, above, below, i
 
-        inch = nint(imperialdecimal * 10.**precision) * (baseDenominator / (10.**precision))
+        inch = nint(imperialdecimal * 10.**decimalprecision) * (baseDenominator / (10.**decimalprecision))
 
         ! Middle
         middlef = lcd(inch, int(baseDenominator))

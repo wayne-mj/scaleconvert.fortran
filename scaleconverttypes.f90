@@ -30,5 +30,5 @@ module scaleconverttypes
     integer, parameter :: inchprecision = 64    ! 64 (1), 32 (2), 16(4), 8(8), 4(16), 2(32), 1(64)
     real, parameter :: inch2mm = 25.4
     real, parameter :: baseDenominator = 10e+4
-    real, parameter :: precision = 2.0
+    real, parameter :: decimalprecision = 2.0
 end module scaleconverttypes
