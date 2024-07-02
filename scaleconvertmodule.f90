@@ -45,6 +45,8 @@ module scaleconvertmodule
         real, allocatable, dimension(:) :: height
         real :: gradient, i, degrees
 
+        ! Initialise variables
+        gradient = 0.
         degrees = 45.
         count = 1
 
@@ -89,6 +91,10 @@ module scaleconvertmodule
         type(fractiontype), dimension(3) :: fractions
         real :: r
         integer :: temp
+
+        ! Initialise variables
+        r = 0.
+        temp =0
 
         ! If there is a feet value
         if (input%feet .gt. 0) then
@@ -142,7 +148,10 @@ module scaleconvertmodule
         type(fractiontype) :: middlef, abovef, belowf
         integer :: inch, above, below, i
 
+        ! Initialise variables
         inch = nint(imperialdecimal * 10.**decimalprecision) * (baseDenominator / (10.**decimalprecision))
+        above = 0
+        below = 0
 
         ! Middle
         middlef = lcd(inch, int(baseDenominator))
@@ -179,6 +188,7 @@ module scaleconvertmodule
         type(scaletype), dimension(13) :: output
         integer :: i, count
 
+        ! Initialise variables
         count = 1
 
         output(count) = calculation(feet * 12.0, scale)
@@ -202,7 +212,9 @@ module scaleconvertmodule
         type(scaletype), dimension(int(division)+1) :: output
         integer :: i, count
 
+        ! Initialise variables
         count = 1
+
         output(count) = calculation(inches, scale)
         output(count)%original%feet = 0
         output(count)%original%inches%unit = inches
@@ -231,6 +243,7 @@ module scaleconvertmodule
         type(fractiontype), dimension(3) :: fractions
         real :: r
 
+        ! Calculate the decimal values
         r = (inches) / scale
         output%imperialdecimal = r
         output%metricdecimal = r * inch2mm

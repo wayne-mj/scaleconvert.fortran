@@ -2,22 +2,25 @@ program scaleconvert
     use fractionmodule
     use scaleconvertmodule
     use trigmod
+    use menumodule
 
     implicit none
+
+    call mainmenu()
     ! type(plotXY), allocatable :: plots (:)
-    type(helixtype), allocatable :: i(:)
-    integer :: j
-    character(len=1) :: deg = achar(176)
+    ! type(helixtype), allocatable :: i(:)
+    ! integer :: j
+    ! character(len=1) :: deg = achar(176)
 
-    write (*, '(A)'), helixheader1
-    write (*, '(A)'), helixheader2
-    i = helix(505.,14.,11.)
-    do j=1, size(i)
-        write(*, helixtable), i(j)%degree, "deg" ,i(j)%height, "mm ", i(j)%gradient, "% " ,i(j)%radius, "mm ", i(j)%clearence, "mm ", i(j)%supports, "mm "
-    end do 
+    ! write (*, '(A)'), helixheader1
+    ! write (*, '(A)'), helixheader2
+    ! i = helix(505.,14.,11.)
+    ! do j=1, size(i)
+    !     write(*, helixtable), i(j)%degree, "deg" ,i(j)%height, "mm ", i(j)%gradient, "% " ,i(j)%radius, "mm ", i(j)%clearence, "mm ", i(j)%supports, "mm "
+    ! end do 
 
-    print *, ""
-    write (*,' (A F10.2)'), "Base Denominator:" , baseDenominator
+    ! print *, ""
+    ! write (*,' (A F10.2)'), "Base Denominator:" , baseDenominator
 
     ! print *, "Clearence: ", i(size(i))%height - i(1)%height
     ! print *, "excluding workmanships"
